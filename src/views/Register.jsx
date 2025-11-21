@@ -1,12 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/figurarte.png";
 
 const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("http://localhost:8000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Registro exitoso");
+      } else {
+        alert("Error: " + data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error de conexión");
+    }
+  };
+
   return (
     <div
       style={{
         width: "100%",
+        minHeight: "78.5vh",
         background: "#f8f4ff",
         display: "flex",
         alignItems: "center",
@@ -14,7 +50,6 @@ const Register = () => {
         padding: "5px",
       }}
     >
-      {/* CARD */}
       <div
         style={{
           width: "100%",
@@ -26,7 +61,6 @@ const Register = () => {
           textAlign: "center",
         }}
       >
-        {/* Logo */}
         <img
           src={logo}
           alt="Logo"
@@ -35,15 +69,14 @@ const Register = () => {
             objectFit: "contain",
           }}
         />
-
         <h2 style={{ color: "#333", marginBottom: "25px" }}>Crear Cuenta</h2>
-
-        {/* Form */}
-        <form>
+        <form onSubmit={handleRegister}>
           <div style={{ marginBottom: "10px" }}>
             <input
               type="text"
               placeholder="Nombre completo"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               style={{
                 width: "100%",
                 padding: "14px 18px",
@@ -59,6 +92,8 @@ const Register = () => {
             <input
               type="email"
               placeholder="Correo electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               style={{
                 width: "100%",
                 padding: "14px 18px",
@@ -74,6 +109,8 @@ const Register = () => {
             <input
               type="password"
               placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               style={{
                 width: "100%",
                 padding: "14px 18px",
@@ -84,24 +121,8 @@ const Register = () => {
               }}
             />
           </div>
-
-          <div style={{ marginBottom: "25px" }}>
-            <input
-              type="text"
-              placeholder="Dirección de envío (opcional)"
-              style={{
-                width: "100%",
-                padding: "14px 18px",
-                borderRadius: "30px",
-                border: "1px solid #ccc",
-                fontSize: "1rem",
-                outline: "none",
-              }}
-            />
-          </div>
-
-          {/* Register button */}
           <button
+            type="submit"
             style={{
               width: "100%",
               padding: "14px",

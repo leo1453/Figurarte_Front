@@ -1,8 +1,42 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/figurarte.png";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Error al iniciar sesión");
+        return;
+      }
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/");
+    } catch (err) {
+      setError("Error del servidor");
+      console.error(err);
+    }
+  };
+
   return (
     <div
       style={{
@@ -15,7 +49,6 @@ const Login = () => {
         padding: "20px",
       }}
     >
-      {/* CARD */}
       <div
         style={{
           width: "100%",
@@ -27,25 +60,35 @@ const Login = () => {
           textAlign: "center",
         }}
       >
-        {/* Logo */}
         <img
           src={logo}
           alt="Logo"
-          style={{
-            width: "160px",
-            marginBottom: "10px",
-            objectFit: "contain",
-          }}
+          style={{ width: "160px", marginBottom: "10px", objectFit: "contain" }}
         />
 
         <h2 style={{ color: "#333", marginBottom: "25px" }}>Iniciar Sesión</h2>
 
-        {/* Form */}
-        <form>
+        {error && (
+          <p
+            style={{
+              color: "red",
+              background: "#ffe6e6",
+              padding: "10px",
+              borderRadius: "10px",
+              marginBottom: "15px",
+            }}
+          >
+            {error}
+          </p>
+        )}
+
+        <form onSubmit={handleLogin}>
           <div style={{ marginBottom: "18px" }}>
             <input
               type="email"
               placeholder="Correo electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               style={{
                 width: "100%",
                 padding: "14px 18px",
@@ -61,6 +104,8 @@ const Login = () => {
             <input
               type="password"
               placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               style={{
                 width: "100%",
                 padding: "14px 18px",
@@ -72,8 +117,8 @@ const Login = () => {
             />
           </div>
 
-          {/* Login button */}
           <button
+            type="submit"
             style={{
               width: "100%",
               padding: "14px",
@@ -85,16 +130,12 @@ const Login = () => {
               fontWeight: "bold",
               cursor: "pointer",
               boxShadow: "0 3px 8px rgba(0,0,0,0.25)",
-              transition: "0.2s",
             }}
-            onMouseEnter={(e) => (e.target.style.opacity = "0.85")}
-            onMouseLeave={(e) => (e.target.style.opacity = "1")}
           >
             Entrar
           </button>
         </form>
 
-        {/* Register link */}
         <p style={{ marginTop: "20px", color: "#555" }}>
           ¿No tienes cuenta?{" "}
           <Link to="/register" style={{ color: "#6a11cb", fontWeight: "bold" }}>
