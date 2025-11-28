@@ -6,9 +6,6 @@ import {
   CardActions,
   Typography,
   Box,
-  Modal,
-  Fade,
-  Backdrop,
 } from "@mui/material";
 import ButtonCustom from "../components/ButtonCustom";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
@@ -16,19 +13,6 @@ import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import { useWishlist } from "../context/WishlistContext";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
-const modalStyle = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  backgroundColor: "white",
-  borderRadius: 3,
-  padding: "30px 25px",
-  width: 350,
-  boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
-  textAlign: "center",
-};
 
 const ProductCard = ({
   id,
@@ -42,23 +26,17 @@ const ProductCard = ({
 }) => {
   const [openDelete, setOpenDelete] = useState(false);
 
-  // ⭐ Obtenemos favoritos y funciones
   const { wishlist, toggleFavorite } = useWishlist();
-
-  // ⭐ Leer usuario real
   const user = JSON.parse(localStorage.getItem("user"));
 
-  // ⭐ Ver si ya está en favoritos
   const isFavorited = wishlist.some((fav) => fav.product_id === id);
 
-  // 👉 Función que incluye user_id
   const handleToggleFavorite = () => {
     if (!user) {
       alert("Debes iniciar sesión para guardar favoritos");
       return;
     }
-
-    toggleFavorite(id, user.id); // 👈 ENVÍA EL user_id
+    toggleFavorite(id, user.id);
   };
 
   return (
@@ -77,15 +55,20 @@ const ProductCard = ({
           },
         }}
       >
+        {/* 🔥 CONTENEDOR DE LA IMAGEN */}
         <Box
           sx={{
             width: "100%",
             height: 260,
             position: "relative",
             overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#fff",
           }}
         >
-          {/* ⭐ ICONO DE FAVORITOS */}
+          {/* ⭐ ICONO FAVORITOS */}
           <Box
             sx={{
               position: "absolute",
@@ -110,17 +93,17 @@ const ProductCard = ({
             )}
           </Box>
 
+          {/* 🔥 IMAGEN PERFECTAMENTE CENTRADA */}
           <CardMedia
             component="img"
             image={image}
             alt={name}
             sx={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
+              maxWidth: "100%",
+              maxHeight: "100%",
+              objectFit: "contain",  // 👈 CENTRADA Y SIN RECORTE
               objectPosition: "center",
               transition: "0.3s ease",
-              "&:hover": { transform: "scale(1.05)" },
             }}
           />
         </Box>
