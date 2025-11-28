@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { Box, Typography, Button, Snackbar, Alert } from "@mui/material";
+import { Box, Typography, Button, Snackbar, Alert, IconButton } from "@mui/material";
 import { useLocation, useParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 const ProductDetail = () => {
   const { state: product } = useLocation();
@@ -9,6 +12,7 @@ const ProductDetail = () => {
 
   const { refreshCart } = useCart();
 
+  const [cantidad, setCantidad] = useState(1);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertType, setAlertType] = useState("success");
   const [alertMsg, setAlertMsg] = useState("");
@@ -21,7 +25,20 @@ const ProductDetail = () => {
     );
   }
 
+  // ===============================
+  //   CAMBIAR CANTIDAD DE COMPRA
+  // ===============================
+  const aumentar = () => {
+    if (cantidad < product.stock) setCantidad(cantidad + 1);
+  };
 
+  const disminuir = () => {
+    if (cantidad > 1) setCantidad(cantidad - 1);
+  };
+
+  // ===============================
+  //   AGREGAR AL CARRITO
+  // ===============================
   const agregarAlCarrito = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -40,7 +57,7 @@ const ProductDetail = () => {
         },
         body: JSON.stringify({
           product_id: product.id,
-          cantidad: 1,
+          cantidad, // 🔥 Cantidad seleccionada
           user_id: user.id,
         }),
       });
@@ -51,7 +68,8 @@ const ProductDetail = () => {
       setAlertMsg("Producto agregado al carrito 🎉");
       setAlertOpen(true);
 
-      refreshCart(); 
+      refreshCart(); // 🔥 Actualiza el contador global
+
     } catch (error) {
       setAlertType("error");
       setAlertMsg("Error al agregar al carrito");
@@ -122,6 +140,43 @@ const ProductDetail = () => {
           <strong>Categoría:</strong> {product.categoria}
         </Typography>
 
+        {/* =============================
+            SELECTOR DE CANTIDAD
+        ============================= */}
+        <Box
+          sx={{
+            mt: 3,
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <IconButton
+            onClick={disminuir}
+            sx={{
+              background: "#eee",
+              "&:hover": { background: "#ddd" },
+            }}
+          >
+            <RemoveIcon />
+          </IconButton>
+
+          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+            {cantidad}
+          </Typography>
+
+          <IconButton
+            onClick={aumentar}
+            sx={{
+              background: "#eee",
+              "&:hover": { background: "#ddd" },
+            }}
+          >
+            <AddIcon />
+          </IconButton>
+        </Box>
+
+        {/* BOTÓN AGREGAR */}
         <Button
           variant="contained"
           sx={{

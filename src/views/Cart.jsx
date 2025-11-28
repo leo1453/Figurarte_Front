@@ -11,6 +11,9 @@ import {
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+
 import ButtonCustom from "../components/ButtonCustom";
 import FeedbackSnackbar from "../components/FeedbackSnackbar";
 import { useCart } from "../context/CartContext";
@@ -42,6 +45,38 @@ export default function Cart() {
       });
     }
     setLoading(false);
+  };
+
+  // 🔥 ACTUALIZAR CANTIDAD (AUMENTAR / DISMINUIR)
+  const updateQuantity = async (item, newQty) => {
+    if (newQty < 1) return; 
+
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?.id;
+
+      await fetch(
+        `http://localhost:8000/api/cart/${item.id}/quantity`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cantidad: newQty,
+            user_id: userId,
+          }),
+        }
+      );
+
+      fetchCart();
+      refreshCart(); // 🔥 actualiza el contador
+    } catch (error) {
+      setAlerta({
+        tipo: "error",
+        mensaje: "Error al actualizar cantidad",
+      });
+    }
   };
 
   const removeItem = async (id) => {
@@ -164,15 +199,30 @@ export default function Cart() {
                   </span>
                 </Typography>
 
-                <Typography sx={{ fontSize: "15px" }}>
-                  Cantidad: <strong>{item.cantidad}</strong>
-                </Typography>
+                {/* 🚀 CONTROLES DE CANTIDAD */}
+                <Box sx={{ display: "flex", alignItems: "center", mt: 1, gap: 1 }}>
+                  <IconButton
+                    onClick={() => updateQuantity(item, item.cantidad - 1)}
+                    sx={{ background: "#eee", "&:hover": { background: "#ddd" } }}
+                  >
+                    <RemoveIcon />
+                  </IconButton>
+
+                  <Typography sx={{ fontSize: 18, fontWeight: "bold", mx: 1 }}>
+                    {item.cantidad}
+                  </Typography>
+
+                  <IconButton
+                    onClick={() => updateQuantity(item, item.cantidad + 1)}
+                    sx={{ background: "#eee", "&:hover": { background: "#ddd" } }}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </Box>
 
                 <Typography sx={{ mt: 1, fontSize: "14px", opacity: 0.8 }}>
                   Subtotal:{" "}
-                  <strong>
-                    ${item.precio_unitario * item.cantidad}
-                  </strong>
+                  <strong>${item.precio_unitario * item.cantidad}</strong>
                 </Typography>
               </CardContent>
 
