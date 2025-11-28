@@ -7,6 +7,7 @@ import AdminPanel from "../views/AdminPanel";
 import ProductsAdmin from "../views/ProductsAdmin";
 import AdminUsers from "../views/AdminUsers";
 import ProductDetail from "../views/ProductDetail";
+import Cart from "../views/Cart";
 
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
@@ -19,6 +20,8 @@ function AppRouter() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/producto/:id" element={<ProductDetail />} />
+      <Route path="/cart" element={<Cart />} />
+
       <Route
         path="/profile"
         element={
