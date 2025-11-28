@@ -25,7 +25,17 @@ const ProductsAdmin = () => {
 
 
   async function loadPokemonCards() {
-    const res = await fetch("/tcg/cards?pageSize=30");
+  try {
+    const res = await fetch("https://api.pokemontcg.io/v2/cards?pageSize=30", {
+      headers: {
+        "X-Api-Key": "753fcb95-7e27-4408-a7dd-bf895902bcfe"  // <-- pon aquí tu key real
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error("Error en la API Pokémon TCG");
+    }
+
     const data = await res.json();
 
     const cards = data.data.map(card => ({
@@ -38,8 +48,13 @@ const ProductsAdmin = () => {
       categoria: "Pokemon Card"
     }));
 
-    setProducts(cards); 
+    setProducts(cards);
+  } catch (error) {
+    console.error("Error cargando cartas:", error);
+    alert("Error al cargar cartas. Verifica tu API KEY.");
   }
+}
+
 
   async function saveImportedCard(card) {
     await fetch("http://localhost:8000/api/products", {
