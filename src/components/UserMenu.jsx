@@ -91,17 +91,11 @@ export default function UserMenu({ user, onLogout, onClose }) {
       >
         Rol: {(user?.role || "user").toUpperCase()}
       </Typography>
-
-      {/* Botones según rol */}
       <Box sx={{ mt: 1, display: "flex", flexDirection: "column", gap: 1 }}>
         {isAdmin ? (
           <>
-            <Link to="/admin/users" style={{ textDecoration: "none" }}>
-              <ButtonCustom title="Usuarios" fullWidth variant="admin" />
-            </Link>
-
-            <Link to="/admin/products" style={{ textDecoration: "none" }}>
-              <ButtonCustom title="Lista de Productos" fullWidth variant="admin" />
+            <Link to="/admin/panel" style={{ textDecoration: "none" }}>
+              <ButtonCustom title="Panel de administrador" fullWidth variant="admin" />
             </Link>
           </>
         ) : (

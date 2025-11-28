@@ -3,20 +3,18 @@ import Home from "../views/Home";
 import About from "../views/About";
 import Login from "../views/Login";
 import Register from "../views/Register";
-import AdminPanel from "../views/AdminPanel";
-import ProductsAdmin from "../views/ProductsAdmin";
+import AdminPanel from "../views/Products";
+import ProductsAdmin from "../views/AdminPanel";
 import AdminUsers from "../views/AdminUsers";
 import ProductDetail from "../views/ProductDetail";
 import Cart from "../views/Cart";
-      import Checkout from "../views/Checkout";
+import Checkout from "../views/Checkout";
 import CompraExitosa from "../views/CompraExitosa";
-
 
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
-      import Wishlist from "../views/Wishlist";
+import Wishlist from "../views/Wishlist";
 import Profile from "../views/Profile";
-
 
 function AppRouter() {
   return (
@@ -28,23 +26,17 @@ function AppRouter() {
       <Route path="/producto/:id" element={<ProductDetail />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/compra-exitosa" element={<CompraExitosa />} />
+      <Route path="/checkout" element={<Checkout />} />
+      <Route path="/wishlist" element={<Wishlist />} />
 
-
-<Route path="/checkout" element={<Checkout />} />
-
-
-<Route path="/wishlist" element={<Wishlist />} />
-
-     <Route
-  path="/profile"
-  element={
-    <ProtectedRoute>
-      <Profile />
-    </ProtectedRoute>
-  }
-/>
-
-
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/admin/users"
@@ -65,7 +57,7 @@ function AppRouter() {
       />
 
       <Route
-        path="/admin/products"
+        path="/admin/panel"
         element={
           <AdminRoute>
             <ProductsAdmin />

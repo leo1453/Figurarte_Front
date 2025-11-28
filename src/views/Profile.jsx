@@ -6,7 +6,7 @@ export default function Profile() {
   const token = storedUser?.token;
 
   const [form, setForm] = useState({
-    id: storedUser?.id || null,   // 🔹 AGREGADO
+    id: storedUser?.id || null,
     name: "",
     email: "",
     shipping_address: "",
@@ -18,7 +18,7 @@ export default function Profile() {
   useEffect(() => {
     if (storedUser) {
       setForm({
-        id: storedUser.id,   // 🔹 AGREGADO
+        id: storedUser.id,
         name: storedUser.name || "",
         email: storedUser.email || "",
         shipping_address: storedUser.shipping_address || "",
@@ -40,7 +40,7 @@ export default function Profile() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form), // 🔹 ENVÍA TAMBIÉN EL ID
+        body: JSON.stringify(form),
       });
 
       const data = await res.json();
@@ -50,7 +50,6 @@ export default function Profile() {
         return;
       }
 
-      // Actualizar localStorage
       const updatedUser = {
         ...storedUser,
         name: data.user.name,
@@ -73,34 +72,54 @@ export default function Profile() {
     <div
       style={{
         maxWidth: "600px",
-        margin: "40px auto",
+        margin: "50px auto",
         padding: "40px",
-        background: "white",
-        borderRadius: "15px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+        background: "linear-gradient(145deg, #ffe4f7, #f0f8ff)",
+        borderRadius: "25px",
+        boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+        border: "2px solid #f2dfff",
       }}
     >
-      <h2 style={{ textAlign: "center", marginBottom: "25px" }}>Mi Perfil</h2>
+      <h2
+        style={{
+          textAlign: "center",
+          marginBottom: "30px",
+          fontWeight: "bold",
+          color: "#c066ff",
+          fontFamily: "'Comic Sans MS', cursive, sans-serif",
+        }}
+      >
+        Mi Perfil 🌸
+      </h2>
 
       {message && (
         <div
           style={{
-            marginBottom: "15px",
-            padding: "10px",
-            background: "#e2ffe2",
-            borderRadius: "8px",
-            color: "#1a7f1a",
+            marginBottom: "20px",
+            padding: "12px",
+            background: "#fffae6",
+            border: "1px solid #ffe58f",
+            borderRadius: "12px",
+            color: "#9c6b00",
             textAlign: "center",
+            fontWeight: "bold",
+            fontSize: "0.95rem",
           }}
         >
           {message}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "18px",
+        }}
+      >
         <div>
-          <label>Nombre</label>
+          <label style={labelStyle}>Nombre</label>
           <input
             name="name"
             value={form.name}
@@ -110,7 +129,7 @@ export default function Profile() {
         </div>
 
         <div>
-          <label>Correo</label>
+          <label style={labelStyle}>Correo</label>
           <input
             name="email"
             value={form.email}
@@ -120,7 +139,7 @@ export default function Profile() {
         </div>
 
         <div>
-          <label>Dirección de envío</label>
+          <label style={labelStyle}>Dirección de envío</label>
           <input
             name="shipping_address"
             value={form.shipping_address}
@@ -130,7 +149,7 @@ export default function Profile() {
         </div>
 
         <div>
-          <label>Nueva contraseña (opcional)</label>
+          <label style={labelStyle}>Nueva contraseña (opcional)</label>
           <input
             type="password"
             name="password"
@@ -142,10 +161,9 @@ export default function Profile() {
         </div>
 
         <ButtonCustom title="Guardar cambios" type="submit" variant="admin" />
-
       </form>
 
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "25px" }}>
         <ButtonCustom
           title="Cerrar sesión"
           variant="delete"
@@ -160,10 +178,22 @@ export default function Profile() {
   );
 }
 
+const labelStyle = {
+  display: "block",
+  marginBottom: "6px",
+  fontWeight: "bold",
+  color: "#6a11cb",
+  fontSize: "0.95rem",
+  fontFamily: "'Roboto', sans-serif",
+};
+
 const inputStyle = {
   width: "100%",
-  padding: "10px 12px",
-  borderRadius: "10px",
-  border: "1px solid #ccc",
-  marginTop: "5px",
+  padding: "12px 15px",
+  borderRadius: "15px",
+  border: "1.5px solid #e0c0ff",
+  outline: "none",
+  fontSize: "1rem",
+  transition: "all 0.2s",
+  background: "#fffafa",
 };
