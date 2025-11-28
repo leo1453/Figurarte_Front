@@ -47,6 +47,7 @@ const Home = () => {
     setEditingProduct(product || {});
     setModalOpen(true);
   };
+
   const handleSave = async (formData) => {
     try {
       if (editingProduct?.id) {
@@ -78,6 +79,7 @@ const Home = () => {
       setAlerta({ tipo: "error", mensaje: "Error al guardar el producto" });
     }
   };
+
   const deleteProduct = async (id) => {
     try {
       await fetch(`http://localhost:8000/api/products/${id}`, {
@@ -92,17 +94,17 @@ const Home = () => {
       setAlerta({ tipo: "error", mensaje: "Error al eliminar el producto" });
     }
   };
+
   const handleSearchSubmit = (value) => {
     setSearch(value);
-    fetchProducts(value);
+    fetchProducts(value); // ⭐ ACTIVAR FILTRO DEL BACKEND
   };
 
   const navigate = useNavigate();
 
-const handleViewDetails = (product) => {
-  navigate(`/producto/${product.id}`, { state: product });
-};
-
+  const handleViewDetails = (product) => {
+    navigate(`/producto/${product.id}`, { state: product });
+  };
 
   return (
     <Box sx={{ width: "100%", p: 0, m: 0 }}>
@@ -124,6 +126,8 @@ const handleViewDetails = (product) => {
 
       <Title text={isAdmin ? "GESTIÓN DE PRODUCTOS" : "Panel Principal"} />
 
+
+      {/* ⭐ BARRA DE BÚSQUEDA FUNCIONAL */}
       <SearchBar
         open={searchOpen}
         setOpen={setSearchOpen}
@@ -148,6 +152,7 @@ const handleViewDetails = (product) => {
         product={editingProduct}
         onSave={handleSave}
       />
+
       {isAdmin && (
         <Box
           sx={{
