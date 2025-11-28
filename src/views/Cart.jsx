@@ -47,9 +47,8 @@ export default function Cart() {
     setLoading(false);
   };
 
-  // 🔥 ACTUALIZAR CANTIDAD (AUMENTAR / DISMINUIR)
   const updateQuantity = async (item, newQty) => {
-    if (newQty < 1) return; 
+    if (newQty < 1) return;
 
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -70,7 +69,7 @@ export default function Cart() {
       );
 
       fetchCart();
-      refreshCart(); // 🔥 actualiza el contador
+      refreshCart();
     } catch (error) {
       setAlerta({
         tipo: "error",
@@ -180,7 +179,12 @@ export default function Cart() {
                   width: 120,
                   height: 120,
                   borderRadius: 2,
-                  objectFit: "cover",
+                  objectFit: "contain",       
+                  backgroundColor: "#f2f2f2",  
+                  padding: "5px",            
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               />
 
@@ -199,7 +203,6 @@ export default function Cart() {
                   </span>
                 </Typography>
 
-                {/* 🚀 CONTROLES DE CANTIDAD */}
                 <Box sx={{ display: "flex", alignItems: "center", mt: 1, gap: 1 }}>
                   <IconButton
                     onClick={() => updateQuantity(item, item.cantidad - 1)}
@@ -221,8 +224,7 @@ export default function Cart() {
                 </Box>
 
                 <Typography sx={{ mt: 1, fontSize: "14px", opacity: 0.8 }}>
-                  Subtotal:{" "}
-                  <strong>${item.precio_unitario * item.cantidad}</strong>
+                  Subtotal: <strong>${item.precio_unitario * item.cantidad}</strong>
                 </Typography>
               </CardContent>
 
