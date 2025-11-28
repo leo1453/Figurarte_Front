@@ -1,10 +1,14 @@
-import React from "react";
-import { Box, Typography, Button } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Typography, Button, Snackbar, Alert } from "@mui/material";
 import { useLocation, useParams } from "react-router-dom";
 
 const ProductDetail = () => {
   const { state: product } = useLocation();
   const { id } = useParams();
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertType, setAlertType] = useState("success");
+  const [alertMsg, setAlertMsg] = useState("");
 
   if (!product) {
     return (
@@ -13,6 +17,34 @@ const ProductDetail = () => {
       </Box>
     );
   }
+
+  // ---------------------------
+  // 🛒 FUNCION AGREGAR AL CARRITO
+  // ---------------------------
+  const agregarAlCarrito = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          product_id: product.id,
+          cantidad: 1,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Error al agregar al carrito");
+
+      setAlertType("success");
+      setAlertMsg("Producto agregado al carrito 🎉");
+      setAlertOpen(true);
+    } catch (error) {
+      setAlertType("error");
+      setAlertMsg("Error al agregar al carrito");
+      setAlertOpen(true);
+    }
+  };
 
   return (
     <Box
@@ -25,13 +57,11 @@ const ProductDetail = () => {
         gap: 4,
       }}
     >
-      {/* Imagen del producto */}
       <Box
         sx={{
           flex: 1,
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
         }}
       >
         <Box
@@ -43,12 +73,10 @@ const ProductDetail = () => {
             maxWidth: 450,
             borderRadius: "14px",
             boxShadow: "0 8px 25px rgba(0,0,0,0.2)",
-            objectFit: "cover",
           }}
         />
       </Box>
 
-      {/* Información del producto */}
       <Box
         sx={{
           flex: 1,
@@ -58,75 +86,59 @@ const ProductDetail = () => {
           boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
         }}
       >
-        <Typography
-          variant="h4"
-          sx={{ fontWeight: "bold", mb: 2, color: "#333" }}
-        >
+        <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2 }}>
           {product.nombre}
         </Typography>
 
         <Typography
           variant="h5"
-          sx={{
-            fontWeight: "bold",
-            color: "#FF66A6",
-            mb: 3,
-          }}
+          sx={{ fontWeight: "bold", color: "#FF66A6", mb: 3 }}
         >
           ${product.precio}
         </Typography>
 
-        <Typography
-          sx={{
-            fontSize: 18,
-            lineHeight: 1.6,
-            mb: 2,
-            color: "#555",
-          }}
-        >
+        <Typography sx={{ fontSize: 18, mb: 2 }}>
           {product.descripcion}
         </Typography>
 
-        <Box
-          sx={{
-            mt: 3,
-            display: "flex",
-            flexDirection: "column",
-            gap: 1.5,
-            fontSize: 16,
-          }}
-        >
-          <Typography>
-            <strong>Stock disponible:</strong> {product.stock}
-          </Typography>
+        <Typography sx={{ fontSize: 18, mb: 1 }}>
+          <strong>Stock:</strong> {product.stock}
+        </Typography>
 
-          <Typography>
-            <strong>Categoría:</strong> {product.categoria}
-          </Typography>
-        </Box>
+        <Typography sx={{ fontSize: 18 }}>
+          <strong>Categoría:</strong> {product.categoria}
+        </Typography>
 
-        {/* Botón de acción */}
         <Button
           variant="contained"
           sx={{
             mt: 4,
             backgroundColor: "#FF66A6",
-            color: "white",
             padding: "12px 22px",
             fontSize: 16,
             borderRadius: "12px",
-            boxShadow: "0 4px 12px rgba(255, 102, 166, 0.4)",
             textTransform: "none",
             "&:hover": {
               backgroundColor: "#ff4f99",
-              boxShadow: "0 6px 18px rgba(255, 102, 166, 0.6)",
             },
           }}
-          onClick={() => alert("Próximamente: carrito 💖")}
+          onClick={agregarAlCarrito}
         >
           Agregar al carrito
         </Button>
       </Box>
+
+      {/* ALERTA DE AGREGADO */}
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={() => setAlertOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert severity={alertType} variant="filled">
+          {alertMsg}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
