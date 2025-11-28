@@ -15,6 +15,7 @@ import CompraExitosa from "../views/CompraExitosa";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
       import Wishlist from "../views/Wishlist";
+import Profile from "../views/Profile";
 
 
 function AppRouter() {
@@ -34,14 +35,15 @@ function AppRouter() {
 
 <Route path="/wishlist" element={<Wishlist />} />
 
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <div>Perfil</div>
-          </ProtectedRoute>
-        }
-      />
+     <Route
+  path="/profile"
+  element={
+    <ProtectedRoute>
+      <Profile />
+    </ProtectedRoute>
+  }
+/>
+
 
 
       <Route
