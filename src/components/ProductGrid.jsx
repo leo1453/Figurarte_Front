@@ -2,7 +2,7 @@ import React from "react";
 import { Grid } from "@mui/material";
 import ProductCard from "./ProductCard";
 
-export const ProductGrid = ({ items, isAdmin, onEditProduct, onDeleteProduct }) => {
+export const ProductGrid = ({ items, isAdmin, onEditProduct, onDeleteProduct, onViewDetails }) => {
   return (
     <Grid container spacing={3} sx={{ p: 2 }}>
       {items.map((item) => (
@@ -11,8 +11,8 @@ export const ProductGrid = ({ items, isAdmin, onEditProduct, onDeleteProduct }) 
             image={item.imagen}
             name={item.nombre}
             price={item.precio}
-            onClick={() => console.log("Ver detalle", item.nombre)}
             isAdmin={isAdmin}
+            onClick={() => onViewDetails(item)}
             onEdit={() => onEditProduct(item)}
             onDelete={() => onDeleteProduct(item.id)}
           />
