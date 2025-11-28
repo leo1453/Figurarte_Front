@@ -103,7 +103,12 @@ export default function CompraExitosa() {
                   width: 70,
                   height: 70,
                   borderRadius: 2,
-                  objectFit: "cover",
+                  objectFit: "contain",     
+                  backgroundColor: "#f2f2f2", 
+                  padding: "4px",            
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               />
 
@@ -122,35 +127,36 @@ export default function CompraExitosa() {
           <Divider sx={{ my: 3 }} />
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-    <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-            window.open(`http://localhost:8000/api/orders/${order.id}/ticket`, "_blank");
-        }}
-    >
-        📄 Descargar Ticket (PDF)
-    </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                window.open(
+                  `http://localhost:8000/api/orders/${order.id}/ticket`,
+                  "_blank"
+                );
+              }}
+            >
+              📄 Descargar Ticket (PDF)
+            </Button>
 
-    <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => {
-            window.open(`http://localhost:8000/api/orders/${order.id}/factura`, "_blank");
-        }}
-    >
-        🧾 Descargar Factura (PDF)
-    </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                window.open(
+                  `http://localhost:8000/api/orders/${order.id}/factura`,
+                  "_blank"
+                );
+              }}
+            >
+              🧾 Descargar Factura (PDF)
+            </Button>
 
-    <Button
-        variant="text"
-        onClick={() => navigate("/")}
-        sx={{ mt: 1 }}
-    >
-        ← Volver al inicio
-    </Button>
-</Box>
-
+            <Button variant="text" onClick={() => navigate("/")} sx={{ mt: 1 }}>
+              ← Volver al inicio
+            </Button>
+          </Box>
         </CardContent>
       </Card>
     </Box>
