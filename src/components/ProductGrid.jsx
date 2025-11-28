@@ -8,6 +8,7 @@ export const ProductGrid = ({ items, isAdmin, onEditProduct, onDeleteProduct, on
       {items.map((item) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
           <ProductCard
+            id={item.id}
             image={item.imagen}
             name={item.nombre}
             price={item.precio}
