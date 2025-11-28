@@ -114,7 +114,7 @@ const Home = () => {
         </Box>
       )}
 
-      <Title text={isAdmin ? "Panel de Administrador" : "Panel Principal"} />
+      <Title text={isAdmin ? "GESTIÓN DE PRODUCTOS" : "Panel Principal"} />
 
       <SearchBar
         open={searchOpen}

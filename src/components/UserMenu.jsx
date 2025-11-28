@@ -13,7 +13,6 @@ export default function UserMenu({ user, onLogout, onClose }) {
         onClose && onClose();
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
@@ -37,7 +36,6 @@ export default function UserMenu({ user, onLogout, onClose }) {
         gap: 1.5,
         transformOrigin: "top right",
         animation: "menuAnimation 0.18s ease-out",
-
         "@keyframes menuAnimation": {
           "0%": { opacity: 0, transform: "scale(0.8)" },
           "100%": { opacity: 1, transform: "scale(1)" },
@@ -57,7 +55,7 @@ export default function UserMenu({ user, onLogout, onClose }) {
           filter: "drop-shadow(0px -1px 2px rgba(0,0,0,0.1))",
         }}
       />
-      <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 1.5 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mb: 1.5 }}>
         <Box
           sx={{
             width: 70,
@@ -93,22 +91,32 @@ export default function UserMenu({ user, onLogout, onClose }) {
       >
         Rol: {(user?.role || "user").toUpperCase()}
       </Typography>
-      {isAdmin && (
-        <Box sx={{ mt: 1, display: "flex", flexDirection: "column", gap: 1 }}>
-          <Link to="/admin/usuarios" style={{ textDecoration: "none" }}>
-            <ButtonCustom title="CRUD Usuarios" fullWidth variant="admin" />
-          </Link>
 
-          <Link to="/admin/products" style={{ textDecoration: "none" }}>
-            <ButtonCustom title="CRUD Productos" fullWidth variant="admin" />
-          </Link>
+      {/* Botones según rol */}
+      <Box sx={{ mt: 1, display: "flex", flexDirection: "column", gap: 1 }}>
+        {isAdmin ? (
+          <>
+            <Link to="/admin/users" style={{ textDecoration: "none" }}>
+              <ButtonCustom title="Usuarios" fullWidth variant="admin" />
+            </Link>
 
-          <Link to="/admin/reportes" style={{ textDecoration: "none" }}>
-            <ButtonCustom title="Reportes" fullWidth variant="adminOutline" />
-          </Link>
-        </Box>
-      )}
-      <Box sx={{ marginTop: 1, display: "flex", justifyContent: "center" }}>
+            <Link to="/admin/products" style={{ textDecoration: "none" }}>
+              <ButtonCustom title="Lista de Productos" fullWidth variant="admin" />
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/profile" style={{ textDecoration: "none" }}>
+              <ButtonCustom title="Mi Perfil" fullWidth variant="admin" />
+            </Link>
+            <Link to="/wishlist" style={{ textDecoration: "none" }}>
+              <ButtonCustom title="Lista de deseos" fullWidth variant="admin" />
+            </Link>
+          </>
+        )}
+      </Box>
+
+      <Box sx={{ mt: 1, display: "flex", justifyContent: "center" }}>
         <ButtonCustom title="Cerrar sesión" variant="delete" onClick={onLogout} />
       </Box>
     </Paper>

@@ -11,6 +11,7 @@ import {
   Backdrop,
 } from "@mui/material";
 import ButtonCustom from "../components/ButtonCustom";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const modalStyle = {
   position: "absolute",
@@ -109,42 +110,16 @@ const ProductCard = ({
           )}
         </CardActions>
       </Card>
-      <Modal
+            <ConfirmDeleteModal
         open={openDelete}
         onClose={() => setOpenDelete(false)}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{ backdrop: { timeout: 300 } }}
-      >
-        <Fade in={openDelete}>
-          <Box sx={modalStyle}>
-            <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
-              Confirmar eliminación
-            </Typography>
-
-            <Typography sx={{ mb: 3, color: "#555" }}>
-              ¿Seguro que quieres eliminar este producto?
-            </Typography>
-
-            <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-              <ButtonCustom
-                title="Cancelar"
-                onClick={() => setOpenDelete(false)}
-                variant="cancel"
-              />
-
-              <ButtonCustom
-                title="Eliminar"
-                onClick={() => {
-                  setOpenDelete(false);
-                  onDelete();
-                }}
-                variant="delete"
-              />
-            </Box>
-          </Box>
-        </Fade>
-      </Modal>
+        onConfirm={() => {
+          setOpenDelete(false);
+          onDelete();
+        }}
+        title="Eliminar producto"
+        description={`¿Seguro que quieres eliminar "${name}"?`}
+      />
     </>
   );
 };
