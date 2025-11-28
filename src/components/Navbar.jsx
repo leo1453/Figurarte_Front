@@ -11,8 +11,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
-    if (!user) return;
-    setMenuOpen(!menuOpen);
+    setMenuOpen((prev) => !prev);
   };
 
   const isAdmin = user?.role === "admin";
@@ -49,6 +48,7 @@ function Navbar() {
           </div>
         </Link>
       </div>
+
       <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
         <div
           style={{
@@ -84,14 +84,9 @@ function Navbar() {
           </button>
         </div>
       </div>
+
       <div style={{ display: "flex", gap: "25px", alignItems: "center" }}>
-        {!user ? (
-          <Link to="/login" style={{ color: "black" }}>
-            <PersonOutlineIcon
-              style={{ fontSize: "28px", cursor: "pointer" }}
-            />
-          </Link>
-        ) : (
+        {user ? (
           <div style={{ position: "relative" }}>
             <PersonOutlineIcon
               onClick={toggleMenu}
@@ -112,8 +107,15 @@ function Navbar() {
               />
             )}
           </div>
+        ) : (
+          <Link to="/login" style={{ color: "black" }}>
+            <PersonOutlineIcon
+              style={{ fontSize: "28px", cursor: "pointer" }}
+            />
+          </Link>
         )}
-        {!isAdmin && (
+
+        {!isAdmin && user && (
           <Link to="/carrito" style={{ color: "black" }}>
             <ShoppingCartOutlinedIcon
               style={{ fontSize: "28px", cursor: "pointer" }}

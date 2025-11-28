@@ -5,6 +5,7 @@ import Login from "../views/Login";
 import Register from "../views/Register";
 import AdminPanel from "../views/AdminPanel";
 import ProductsAdmin from "../views/ProductsAdmin";
+import AdminUsers from "../views/AdminUsers";
 
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
@@ -12,13 +13,10 @@ import AdminRoute from "./AdminRoute";
 function AppRouter() {
   return (
     <Routes>
-      {/* Todo esto es público */}
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-
-      {/* Solo usuarios logueados (ejemplo) */}
       <Route
         path="/profile"
         element={
@@ -28,7 +26,15 @@ function AppRouter() {
         }
       />
 
-      {/* Solo admin */}
+      <Route
+        path="/admin/users"
+        element={
+          <AdminRoute>
+            <AdminUsers />
+          </AdminRoute>
+        }
+      />
+
       <Route
         path="/admin"
         element={
