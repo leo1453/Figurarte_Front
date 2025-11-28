@@ -13,7 +13,6 @@ import {
 import ButtonCustom from "../components/ButtonCustom";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
-// ⭐ NUEVO
 import { useWishlist } from "../context/WishlistContext";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -32,7 +31,7 @@ const modalStyle = {
 };
 
 const ProductCard = ({
-  id,           // ⭐ NECESARIO para wishlist
+  id,
   image,
   name,
   price,
@@ -43,11 +42,24 @@ const ProductCard = ({
 }) => {
   const [openDelete, setOpenDelete] = useState(false);
 
-  // ⭐ NUEVO - obtener favoritos
+  // ⭐ Obtenemos favoritos y funciones
   const { wishlist, toggleFavorite } = useWishlist();
 
-  // ⭐ Saber si ya está en favoritos
+  // ⭐ Leer usuario real
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // ⭐ Ver si ya está en favoritos
   const isFavorited = wishlist.some((fav) => fav.product_id === id);
+
+  // 👉 Función que incluye user_id
+  const handleToggleFavorite = () => {
+    if (!user) {
+      alert("Debes iniciar sesión para guardar favoritos");
+      return;
+    }
+
+    toggleFavorite(id, user.id); // 👈 ENVÍA EL user_id
+  };
 
   return (
     <>
@@ -89,7 +101,7 @@ const ProductCard = ({
               alignItems: "center",
               justifyContent: "center",
             }}
-            onClick={() => toggleFavorite(id)}
+            onClick={handleToggleFavorite}
           >
             {isFavorited ? (
               <FavoriteIcon sx={{ color: "red", fontSize: 24 }} />
