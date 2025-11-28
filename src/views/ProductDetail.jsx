@@ -21,9 +21,7 @@ const ProductDetail = () => {
     );
   }
 
-  // ---------------------------
-  // 🛒 FUNCION AGREGAR AL CARRITO
-  // ---------------------------
+
   const agregarAlCarrito = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -43,7 +41,7 @@ const ProductDetail = () => {
         body: JSON.stringify({
           product_id: product.id,
           cantidad: 1,
-          user_id: user.id, // 👈👈 AHORA SI SE ENVÍA AL BACKEND
+          user_id: user.id,
         }),
       });
 
@@ -53,7 +51,7 @@ const ProductDetail = () => {
       setAlertMsg("Producto agregado al carrito 🎉");
       setAlertOpen(true);
 
-      refreshCart(); // 🔥 Actualiza el contador del carrito
+      refreshCart(); 
     } catch (error) {
       setAlertType("error");
       setAlertMsg("Error al agregar al carrito");
@@ -143,7 +141,6 @@ const ProductDetail = () => {
         </Button>
       </Box>
 
-      {/* ALERTA DE AGREGADO */}
       <Snackbar
         open={alertOpen}
         autoHideDuration={3000}

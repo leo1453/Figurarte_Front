@@ -24,7 +24,6 @@ export default function Cart() {
   const { refreshCart } = useCart();
   const navigate = useNavigate();
 
-  // 🔥 Obtener carrito según el usuario
   const fetchCart = async () => {
     setLoading(true);
     try {

@@ -10,7 +10,6 @@ export function WishlistProvider({ children }) {
     return user?.id || null;
   };
 
-  // 🔥 Cargar favoritos según el usuario REAL
   const loadWishlist = async () => {
     try {
       const userId = getUserId();
@@ -31,7 +30,6 @@ export function WishlistProvider({ children }) {
     }
   };
 
-  // 🔥 Agregar / quitar favoritos con user_id y product_id
   const toggleFavorite = async (productId, userId) => {
     if (!userId) {
       console.warn("Intento de guardar favorito sin usuario logueado");
@@ -43,11 +41,11 @@ export function WishlistProvider({ children }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         product_id: productId,
-        user_id: userId, // 👈 AHORA SÍ
+        user_id: userId, 
       }),
     });
 
-    loadWishlist(); // Recargar listado
+    loadWishlist(); 
   };
 
   useEffect(() => {

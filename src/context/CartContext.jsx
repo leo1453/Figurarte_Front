@@ -10,20 +10,17 @@ export function CartProvider({ children }) {
       const user = JSON.parse(localStorage.getItem("user"));
       const userId = user?.id;
 
-      // Si nadie ha iniciado sesión
       if (!userId) {
         setCartCount(0);
         return;
       }
 
-      // Hacer la petición correcta al backend
       const res = await fetch(
         `http://localhost:8000/api/cart?user_id=${userId}`
       );
 
       const data = await res.json();
 
-      // Sumar cantidades del carrito real
       const totalItems = data.reduce(
         (sum, item) => sum + item.cantidad,
         0

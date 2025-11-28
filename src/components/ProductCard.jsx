@@ -55,7 +55,6 @@ const ProductCard = ({
           },
         }}
       >
-        {/* 🔥 CONTENEDOR DE LA IMAGEN */}
         <Box
           sx={{
             width: "100%",
@@ -68,7 +67,6 @@ const ProductCard = ({
             backgroundColor: "#fff",
           }}
         >
-          {/* ⭐ ICONO FAVORITOS */}
           <Box
             sx={{
               position: "absolute",
@@ -93,7 +91,6 @@ const ProductCard = ({
             )}
           </Box>
 
-          {/* 🔥 IMAGEN PERFECTAMENTE CENTRADA */}
           <CardMedia
             component="img"
             image={image}
@@ -101,7 +98,7 @@ const ProductCard = ({
             sx={{
               maxWidth: "100%",
               maxHeight: "100%",
-              objectFit: "contain",  // 👈 CENTRADA Y SIN RECORTE
+              objectFit: "contain",  
               objectPosition: "center",
               transition: "0.3s ease",
             }}
