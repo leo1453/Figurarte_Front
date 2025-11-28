@@ -13,11 +13,51 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import ButtonCustom from "../components/ButtonCustom";
 import FeedbackSnackbar from "../components/FeedbackSnackbar";
+import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [alerta, setAlerta] = useState({ tipo: "", mensaje: "" });
+
+  const { refreshCart } = useCart();
+const navigate = useNavigate();
+
+const handleCheckout = async () => {
+  try {
+    const res = await fetch("http://localhost:8000/api/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setAlerta({
+        tipo: "error",
+        mensaje: data.error || "Error al procesar la compra",
+      });
+      return;
+    }
+
+    // Actualiza el carrito global
+    refreshCart();
+
+    // Redirige a pantalla de éxito
+    navigate("/compra-exitosa", { state: { order: data.order } });
+
+  } catch (error) {
+    console.error(error);
+    setAlerta({
+      tipo: "error",
+      mensaje: "Hubo un error durante la compra",
+    });
+  }
+};
+
 
   const fetchCart = async () => {
     setLoading(true);
@@ -194,13 +234,13 @@ export default function Cart() {
               onClick={clearCart}
               variant="delete"
             />
-            <ButtonCustom
-              title="Comprar ahora"
-              onClick={() =>
-                setAlerta({ tipo: "success", mensaje: "Procesando compra..." })
-              }
-              variant="admin"
-            />
+   <ButtonCustom
+  title="Comprar ahora"
+  onClick={() => navigate("/checkout")}
+  variant="admin"
+/>
+
+
           </Box>
         </>
       )}
