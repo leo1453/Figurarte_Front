@@ -28,25 +28,40 @@ export default function Checkout() {
     0
   );
 
-  const confirmarCompra = async () => {
-    try {
-      const res = await fetch("http://localhost:8000/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await res.json();
+const confirmarCompra = async () => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
 
-      if (!res.ok) {
-        setAlerta({ tipo: "error", mensaje: data.error });
-        return;
-      }
-
-      navigate("/compra-exitosa", { state: { order: data.order } });
-
-    } catch (error) {
-      setAlerta({ tipo: "error", mensaje: "Error al procesar compra" });
+    if (!user) {
+      setAlerta({ tipo: "error", mensaje: "Debes iniciar sesión para comprar" });
+      return;
     }
-  };
+
+    const res = await fetch("http://localhost:8000/api/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: user.id
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setAlerta({ tipo: "error", mensaje: data.error });
+      return;
+    }
+
+    navigate("/compra-exitosa", { state: { order: data.order } });
+
+  } catch (error) {
+    setAlerta({ tipo: "error", mensaje: "Error al procesar compra" });
+  }
+};
+
 
   return (
     <Box sx={{ maxWidth: 800, mx: "auto", mt: 5, px: 2 }}>
@@ -69,7 +84,9 @@ export default function Checkout() {
                 mb: 1.5,
               }}
             >
-              <Typography>{item.nombre_producto} x {item.cantidad}</Typography>
+              <Typography>
+                {item.nombre_producto} x {item.cantidad}
+              </Typography>
               <Typography>${item.precio_unitario * item.cantidad}</Typography>
             </Box>
           ))}
