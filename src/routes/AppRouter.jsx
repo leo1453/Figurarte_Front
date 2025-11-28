@@ -3,14 +3,49 @@ import Home from "../views/Home";
 import About from "../views/About";
 import Login from "../views/Login";
 import Register from "../views/Register";
+import AdminPanel from "../views/AdminPanel";
+import ProductsAdmin from "../views/ProductsAdmin";
+
+import ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
 
 function AppRouter() {
   return (
     <Routes>
+      {/* Todo esto es público */}
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+
+      {/* Solo usuarios logueados (ejemplo) */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <div>Perfil</div>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Solo admin */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminPanel />
+          </AdminRoute>
+        }
+      />
+
+      <Route
+        path="/admin/products"
+        element={
+          <AdminRoute>
+            <ProductsAdmin />
+          </AdminRoute>
+        }
+      />
     </Routes>
   );
 }

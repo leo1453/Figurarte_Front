@@ -1,10 +1,22 @@
 import { Snackbar, Alert } from "@mui/material";
 
-export default function FeedbackSnackbar({ open, onClose, type, title, message }) {
+export default function FeedbackSnackbar({ alerta, setAlerta }) {
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") return;
+    setAlerta({ tipo: "", mensaje: "" });
+  };
+
+  if (!alerta.mensaje) return null;
+
   return (
-    <Snackbar open={open} autoHideDuration={3000} onClose={onClose}>
-      <Alert onClose={onClose} severity={type || "info"} sx={{ width: "100%" }}>
-        <strong>{title}: </strong> {message}
+    <Snackbar open={!!alerta.mensaje} autoHideDuration={3000} onClose={handleClose}>
+      <Alert
+        onClose={handleClose}
+        severity={alerta.tipo || "info"}
+        sx={{ width: "100%" }}
+        variant="filled"
+      >
+        {alerta.mensaje}
       </Alert>
     </Snackbar>
   );
