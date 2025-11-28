@@ -60,7 +60,6 @@ export default function CompraExitosa() {
         }}
       >
         <CardContent>
-          {/* INFORMACIÓN DE ORDEN */}
           <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
             🧾 Información del Pedido
           </Typography>
@@ -122,9 +121,7 @@ export default function CompraExitosa() {
 
           <Divider sx={{ my: 3 }} />
 
-          {/* BOTONES */}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-    {/* Descargar ticket */}
     <Button
         variant="contained"
         color="primary"
@@ -135,7 +132,6 @@ export default function CompraExitosa() {
         📄 Descargar Ticket (PDF)
     </Button>
 
-    {/* Descargar factura */}
     <Button
         variant="contained"
         color="secondary"
@@ -144,15 +140,6 @@ export default function CompraExitosa() {
         }}
     >
         🧾 Descargar Factura (PDF)
-    </Button>
-
-    {/* Botón de contacto */}
-    <Button
-        variant="outlined"
-        color="success"
-        onClick={() => alert("Función de mensajes próximamente")}
-    >
-        📩 Enviar Mensaje
     </Button>
 
     <Button
