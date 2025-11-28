@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Box, Typography, Button, Snackbar, Alert } from "@mui/material";
 import { useLocation, useParams } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 const ProductDetail = () => {
   const { state: product } = useLocation();
   const { id } = useParams();
+
+  const { refreshCart } = useCart();
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertType, setAlertType] = useState("success");
@@ -23,6 +26,15 @@ const ProductDetail = () => {
   // ---------------------------
   const agregarAlCarrito = async () => {
     try {
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user) {
+        setAlertType("error");
+        setAlertMsg("Debes iniciar sesión para agregar al carrito");
+        setAlertOpen(true);
+        return;
+      }
+
       const res = await fetch("http://localhost:8000/api/cart/add", {
         method: "POST",
         headers: {
@@ -31,6 +43,7 @@ const ProductDetail = () => {
         body: JSON.stringify({
           product_id: product.id,
           cantidad: 1,
+          user_id: user.id, // 👈👈 AHORA SI SE ENVÍA AL BACKEND
         }),
       });
 
@@ -39,6 +52,8 @@ const ProductDetail = () => {
       setAlertType("success");
       setAlertMsg("Producto agregado al carrito 🎉");
       setAlertOpen(true);
+
+      refreshCart(); // 🔥 Actualiza el contador del carrito
     } catch (error) {
       setAlertType("error");
       setAlertMsg("Error al agregar al carrito");

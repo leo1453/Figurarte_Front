@@ -22,47 +22,18 @@ export default function Cart() {
   const [alerta, setAlerta] = useState({ tipo: "", mensaje: "" });
 
   const { refreshCart } = useCart();
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const handleCheckout = async () => {
-  try {
-    const res = await fetch("http://localhost:8000/api/checkout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setAlerta({
-        tipo: "error",
-        mensaje: data.error || "Error al procesar la compra",
-      });
-      return;
-    }
-
-    // Actualiza el carrito global
-    refreshCart();
-
-    // Redirige a pantalla de éxito
-    navigate("/compra-exitosa", { state: { order: data.order } });
-
-  } catch (error) {
-    console.error(error);
-    setAlerta({
-      tipo: "error",
-      mensaje: "Hubo un error durante la compra",
-    });
-  }
-};
-
-
+  // 🔥 Obtener carrito según el usuario
   const fetchCart = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8000/api/cart");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?.id;
+
+      const res = await fetch(
+        `http://localhost:8000/api/cart?user_id=${userId}`
+      );
       const data = await res.json();
       setItems(data);
     } catch (error) {
@@ -76,21 +47,43 @@ const handleCheckout = async () => {
 
   const removeItem = async (id) => {
     try {
-      await fetch(`http://localhost:8000/api/cart/${id}`, { method: "DELETE" });
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?.id;
+
+      await fetch(
+        `http://localhost:8000/api/cart/${id}?user_id=${userId}`,
+        { method: "DELETE" }
+      );
+
       setAlerta({ tipo: "success", mensaje: "Producto eliminado" });
       fetchCart();
+      refreshCart();
     } catch (error) {
-      setAlerta({ tipo: "error", mensaje: "Error al eliminar el producto" });
+      setAlerta({
+        tipo: "error",
+        mensaje: "Error al eliminar el producto",
+      });
     }
   };
 
   const clearCart = async () => {
     try {
-      await fetch("http://localhost:8000/api/cart", { method: "DELETE" });
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?.id;
+
+      await fetch(
+        `http://localhost:8000/api/cart?user_id=${userId}`,
+        { method: "DELETE" }
+      );
+
       setAlerta({ tipo: "success", mensaje: "Carrito vaciado" });
       fetchCart();
+      refreshCart();
     } catch (error) {
-      setAlerta({ tipo: "error", mensaje: "Error al vaciar el carrito" });
+      setAlerta({
+        tipo: "error",
+        mensaje: "Error al vaciar el carrito",
+      });
     }
   };
 
@@ -234,13 +227,12 @@ const handleCheckout = async () => {
               onClick={clearCart}
               variant="delete"
             />
-   <ButtonCustom
-  title="Comprar ahora"
-  onClick={() => navigate("/checkout")}
-  variant="admin"
-/>
 
-
+            <ButtonCustom
+              title="Comprar ahora"
+              onClick={() => navigate("/checkout")}
+              variant="admin"
+            />
           </Box>
         </>
       )}

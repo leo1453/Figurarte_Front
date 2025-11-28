@@ -9,9 +9,19 @@ export default function Checkout() {
   const [alerta, setAlerta] = useState({ tipo: "", mensaje: "" });
   const navigate = useNavigate();
 
+  // 🔥 Obtener carrito filtrado por usuario
   const fetchCart = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+      setAlerta({ tipo: "error", mensaje: "Debes iniciar sesión" });
+      return;
+    }
+
     try {
-      const res = await fetch("http://localhost:8000/api/cart");
+      const res = await fetch(
+        `http://localhost:8000/api/cart?user_id=${user.id}`
+      );
       const data = await res.json();
       setCart(data);
     } catch (error) {
@@ -28,40 +38,38 @@ export default function Checkout() {
     0
   );
 
-const confirmarCompra = async () => {
-  try {
-    const user = JSON.parse(localStorage.getItem("user"));
+  const confirmarCompra = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
 
-    if (!user) {
-      setAlerta({ tipo: "error", mensaje: "Debes iniciar sesión para comprar" });
-      return;
+      if (!user) {
+        setAlerta({ tipo: "error", mensaje: "Debes iniciar sesión para comprar" });
+        return;
+      }
+
+      const res = await fetch("http://localhost:8000/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          user_id: user.id, // 👈 YA SE ENVÍA AL BACKEND
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setAlerta({ tipo: "error", mensaje: data.error });
+        return;
+      }
+
+      navigate("/compra-exitosa", { state: { order: data.order } });
+    } catch (error) {
+      setAlerta({ tipo: "error", mensaje: "Error al procesar compra" });
     }
-
-    const res = await fetch("http://localhost:8000/api/checkout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: user.id
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      setAlerta({ tipo: "error", mensaje: data.error });
-      return;
-    }
-
-    navigate("/compra-exitosa", { state: { order: data.order } });
-
-  } catch (error) {
-    setAlerta({ tipo: "error", mensaje: "Error al procesar compra" });
-  }
-};
-
+  };
 
   return (
     <Box sx={{ maxWidth: 800, mx: "auto", mt: 5, px: 2 }}>
