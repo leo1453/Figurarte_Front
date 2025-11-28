@@ -10,6 +10,7 @@ import AdminUsers from "../views/AdminUsers";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
 
+
 function AppRouter() {
   return (
     <Routes>
@@ -17,6 +18,7 @@ function AppRouter() {
       <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+
       <Route
         path="/profile"
         element={
@@ -25,6 +27,7 @@ function AppRouter() {
           </ProtectedRoute>
         }
       />
+
 
       <Route
         path="/admin/users"

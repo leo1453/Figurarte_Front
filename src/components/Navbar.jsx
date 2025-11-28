@@ -121,7 +121,10 @@ function Navbar() {
               style={{ fontSize: "28px", cursor: "pointer" }}
             />
           </Link>
+        
         )}
+
+        
       </div>
     </nav>
   );

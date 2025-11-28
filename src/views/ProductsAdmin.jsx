@@ -23,6 +23,38 @@ const ProductsAdmin = () => {
     fetchProducts();
   }, []);
 
+
+  async function loadPokemonCards() {
+    const res = await fetch("/tcg/cards?pageSize=30");
+    const data = await res.json();
+
+    const cards = data.data.map(card => ({
+      nombre: card.name,
+      descripcion:
+        card.supertype + " / " + (card.subtypes?.join(", ") || ""),
+      precio: 99,
+      imagen: card.images.small,
+      stock: 10,
+      categoria: "Pokemon Card"
+    }));
+
+    setProducts(cards); 
+  }
+
+  async function saveImportedCard(card) {
+    await fetch("http://localhost:8000/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(card)
+    });
+
+    alert("Producto agregado desde Pokémon API");
+    fetchProducts();
+  }
+
+
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
@@ -81,6 +113,7 @@ const ProductsAdmin = () => {
     });
   }
 
+
   return (
     <div
       style={{
@@ -104,6 +137,26 @@ const ProductsAdmin = () => {
           Administrar Productos
         </h2>
 
+        {/* Botón para importar cartas Pokémon */}
+        <button
+          onClick={loadPokemonCards}
+          style={{
+            width: "100%",
+            padding: "14px",
+            marginBottom: "20px",
+            border: "none",
+            borderRadius: "30px",
+            background: "linear-gradient(90deg, #ffcb05, #3b4cca)",
+            color: "white",
+            fontSize: "1.1rem",
+            fontWeight: "bold",
+            cursor: "pointer"
+          }}
+        >
+          Importar Cartas Pokémon
+        </button>
+
+        {/* FORMULARIO */}
         <form onSubmit={saveProduct} style={{ marginBottom: "30px" }}>
           <input name="nombre" placeholder="Nombre" value={form.nombre} onChange={handleChange} style={inputStyle} />
           <input name="descripcion" placeholder="Descripción" value={form.descripcion} onChange={handleChange} style={inputStyle} />
@@ -131,6 +184,7 @@ const ProductsAdmin = () => {
           </button>
         </form>
 
+        {/* TABLA */}
         <table style={{ width: "100%", textAlign: "left", borderCollapse: "collapse" }}>
           <thead>
             <tr>
@@ -144,40 +198,63 @@ const ProductsAdmin = () => {
 
           <tbody>
             {products.map((p) => (
-              <tr key={p.id} style={{ borderBottom: "1px solid #ddd" }}>
+              <tr key={p.id || p.nombre} style={{ borderBottom: "1px solid #ddd" }}>
                 <td>{p.nombre}</td>
                 <td>${p.precio}</td>
                 <td>{p.stock}</td>
                 <td>{p.categoria}</td>
                 <td style={{ display: "flex", gap: "8px" }}>
                   
-                  <button
-                    onClick={() => loadProduct(p)}
-                    style={{
-                      background: "#2575fc",
-                      color: "white",
-                      border: "none",
-                      padding: "8px 12px",
-                      borderRadius: "10px",
-                      cursor: "pointer"
-                    }}
-                  >
-                    Editar
-                  </button>
+                  {/* Editar */}
+                  {p.id && (
+                    <button
+                      onClick={() => loadProduct(p)}
+                      style={{
+                        background: "#2575fc",
+                        color: "white",
+                        border: "none",
+                        padding: "8px 12px",
+                        borderRadius: "10px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      Editar
+                    </button>
+                  )}
 
-                  <button
-                    onClick={() => deleteProduct(p.id)}
-                    style={{
-                      background: "red",
-                      color: "white",
-                      border: "none",
-                      padding: "8px 12px",
-                      borderRadius: "10px",
-                      cursor: "pointer"
-                    }}
-                  >
-                    Eliminar
-                  </button>
+                  {/* Guardar carta importada */}
+                  {!p.id && (
+                    <button
+                      onClick={() => saveImportedCard(p)}
+                      style={{
+                        background: "#6a11cb",
+                        color: "white",
+                        border: "none",
+                        padding: "8px 12px",
+                        borderRadius: "10px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      Guardar
+                    </button>
+                  )}
+
+                  {/* Eliminar */}
+                  {p.id && (
+                    <button
+                      onClick={() => deleteProduct(p.id)}
+                      style={{
+                        background: "red",
+                        color: "white",
+                        border: "none",
+                        padding: "8px 12px",
+                        borderRadius: "10px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      Eliminar
+                    </button>
+                  )}
 
                 </td>
               </tr>
