@@ -7,11 +7,19 @@ import Title from "../components/Title";
 import SearchBar from "../components/SearchBar";
 import FabCustom from "../components/FabCustom";
 import FeedbackSnackbar from "../components/FeedbackSnackbar";
+import { ProductGrid } from "../components/ProductGrid";
+
 
 const Home = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [alerta, setAlerta] = useState({ tipo: "", mensaje: "" });
   const [loading] = useState(false);
+  const demoProducts = [
+  { id: 1, name: "Neko Rosa", price: 299, image: "/assets/neko1.png" },
+  { id: 2, name: "Conejito Suave", price: 249, image: "/assets/conejo1.png" },
+  { id: 3, name: "Osito Miel", price: 199, image: "/assets/osito1.png" },
+];
+
 
   // Datos visuales dummy
   const demoItems = [
@@ -47,6 +55,8 @@ const Home = () => {
         setOpen={setSearchOpen}
         placeholder="Buscar reportes..."
       />
+
+      <ProductGrid items={demoProducts} />
 
       {/* FAB buscador */}
       <Box sx={{ position: "fixed", bottom: 100, right: 16 }}>

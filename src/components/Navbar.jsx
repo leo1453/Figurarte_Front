@@ -1,10 +1,41 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import logo from "../assets/figurarte.png"; 
+import logo from "../assets/figurarte.png";
+import UserMenu from "../components/UserMenu";
 
 function Navbar() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [menuOpen, setMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
+  const navigate = useNavigate();
+
+  const toggleMenu = () => {
+    if (!user) return;
+    setMenuOpen(!menuOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    setMenuOpen(false);
+    navigate("/login");
+  };
+
+  // Detectar clic fuera y cerrar menú
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    }
+
+    if (menuOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
+
   return (
     <nav
       style={{
@@ -20,14 +51,13 @@ function Navbar() {
         zIndex: 1000,
       }}
     >
-      {/* Logo */}
       <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
         <Link to="/" style={{ display: "block" }}>
           <div
             style={{
               width: "180px",
               height: "100px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             <img
@@ -39,14 +69,7 @@ function Navbar() {
         </Link>
       </div>
 
-      {/* Search bar */}
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+      <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
         <div
           style={{
             width: "60%",
@@ -85,14 +108,31 @@ function Navbar() {
         </div>
       </div>
 
-      {/* User + Cart icons */}
       <div style={{ display: "flex", gap: "25px", alignItems: "center" }}>
-        <Link to="/login" style={{ color: "black" }}>
-          <PersonOutlineIcon style={{ fontSize: "28px", cursor: "pointer" }} />
-        </Link>
+        {!user ? (
+          <Link to="/login" style={{ color: "black" }}>
+            <PersonOutlineIcon style={{ fontSize: "28px", cursor: "pointer" }} />
+          </Link>
+        ) : (
+          <div style={{ position: "relative" }} ref={userMenuRef}>
+            <PersonOutlineIcon
+              onClick={toggleMenu}
+              style={{ fontSize: "28px", cursor: "pointer", color: "black" }}
+            />
+
+            {menuOpen && (
+              <UserMenu
+                user={user}
+                onLogout={handleLogout}
+              />
+            )}
+          </div>
+        )}
 
         <Link to="/carrito" style={{ color: "black" }}>
-          <ShoppingCartOutlinedIcon style={{ fontSize: "28px", cursor: "pointer" }} />
+          <ShoppingCartOutlinedIcon
+            style={{ fontSize: "28px", cursor: "pointer" }}
+          />
         </Link>
       </div>
     </nav>

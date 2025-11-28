@@ -29,8 +29,17 @@ const Login = () => {
         setError(data.error || "Error al iniciar sesión");
         return;
       }
+
+      // Guardar usuario en localStorage
       localStorage.setItem("user", JSON.stringify(data.user));
-      navigate("/");
+
+      // Redirección según rol
+      if (data.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+
     } catch (err) {
       setError("Error del servidor");
       console.error(err);
@@ -63,7 +72,11 @@ const Login = () => {
         <img
           src={logo}
           alt="Logo"
-          style={{ width: "160px", marginBottom: "10px", objectFit: "contain" }}
+          style={{
+            width: "160px",
+            marginBottom: "10px",
+            objectFit: "contain",
+          }}
         />
 
         <h2 style={{ color: "#333", marginBottom: "25px" }}>Iniciar Sesión</h2>
