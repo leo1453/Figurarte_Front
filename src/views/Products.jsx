@@ -34,7 +34,7 @@ const AdminPanel = () => {
         <h1 style={{ marginBottom: "20px" }}>Panel de Administrador</h1>
 
         <Link
-          to="/admin/products"
+          to="/admin/panel"
           style={{
             display: "inline-block",
             padding: "15px 25px",

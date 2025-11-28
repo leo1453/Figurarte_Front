@@ -52,6 +52,28 @@ const AdminPanel = () => {
     }
   }
 
+  async function saveImportedCard(card) {
+    try {
+      await fetch("http://localhost:8000/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(card),
+      });
+
+      setAlerta({
+        tipo: "success",
+        mensaje: `Carta "${card.nombre}" guardada correctamente`,
+      });
+
+      fetchProducts();
+    } catch {
+      setAlerta({
+        tipo: "error",
+        mensaje: "No se pudo guardar la carta",
+      });
+    }
+  }
+
   const handleExcelClick = () => {
     if (inputRef.current) inputRef.current.click();
   };
@@ -143,7 +165,9 @@ const AdminPanel = () => {
           <div
             onClick={() => navigate("/")}
             style={cardStyle("#e2d7ff")}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.04)")
+            }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             Administrar Productos
@@ -152,7 +176,9 @@ const AdminPanel = () => {
           <div
             onClick={handleExcelClick}
             style={cardStyle("#d4f8d3")}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.04)")
+            }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             Importar Excel
@@ -161,7 +187,9 @@ const AdminPanel = () => {
           <div
             onClick={loadPokemonCards}
             style={cardStyle("#ffd4e8")}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.04)")
+            }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             Cartas Pokémon
@@ -170,7 +198,9 @@ const AdminPanel = () => {
           <div
             onClick={() => navigate("/admin/users")}
             style={cardStyle("#d6ecff")}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.04)")
+            }
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             Gestionar Usuarios
@@ -214,7 +244,7 @@ const AdminPanel = () => {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
                 gap: "15px",
               }}
             >
@@ -236,11 +266,30 @@ const AdminPanel = () => {
                       width: "100px",
                       height: "140px",
                       marginBottom: "8px",
+                      borderRadius: "10px",
                     }}
                   />
+
                   <div style={{ fontWeight: "bold", fontSize: "0.9rem" }}>
                     {card.nombre}
                   </div>
+
+                  <button
+                    onClick={() => saveImportedCard(card)}
+                    style={{
+                      marginTop: "10px",
+                      width: "100%",
+                      padding: "8px",
+                      border: "none",
+                      borderRadius: "10px",
+                      background: "#6a11cb",
+                      color: "white",
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Importar
+                  </button>
                 </div>
               ))}
             </div>
