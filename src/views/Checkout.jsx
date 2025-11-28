@@ -3,13 +3,16 @@ import { Box, Typography, Card, CardContent, Divider } from "@mui/material";
 import ButtonCustom from "../components/ButtonCustom";
 import FeedbackSnackbar from "../components/FeedbackSnackbar";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext"; // IMPORTANTE
 
 export default function Checkout() {
   const [cart, setCart] = useState([]);
   const [alerta, setAlerta] = useState({ tipo: "", mensaje: "" });
   const navigate = useNavigate();
 
-  // 🔥 Obtener carrito filtrado por usuario
+  const { refreshCart } = useCart(); // ACCEDEMOS AL CONTADOR GLOBAL
+
+  // Obtener carrito filtrado por usuario
   const fetchCart = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -54,7 +57,7 @@ export default function Checkout() {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          user_id: user.id, // 👈 YA SE ENVÍA AL BACKEND
+          user_id: user.id,
         }),
       });
 
@@ -65,7 +68,12 @@ export default function Checkout() {
         return;
       }
 
+      // ACTUALIZAR CONTADOR GLOBAL DEL NAVBAR
+      await refreshCart();
+
+      // Redirigir al éxito
       navigate("/compra-exitosa", { state: { order: data.order } });
+
     } catch (error) {
       setAlerta({ tipo: "error", mensaje: "Error al procesar compra" });
     }

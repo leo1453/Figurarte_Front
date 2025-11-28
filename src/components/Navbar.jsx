@@ -3,13 +3,17 @@ import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import Badge from "@mui/material/Badge";
 import logo from "../assets/figurarte.png";
 import UserMenu from "../components/UserMenu";
+import { useCart } from "../context/CartContext";
 
 function Navbar() {
-  const navigate = useNavigate();   // 👈 agregado para navegación
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const { cartCount } = useCart();   // <--- AQUI USAMOS EL CONTADOR GLOBAL
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -34,13 +38,7 @@ function Navbar() {
     >
       <div>
         <Link to="/">
-          <div
-            style={{
-              width: "180px",
-              height: "100px",
-              cursor: "pointer",
-            }}
-          >
+          <div style={{ width: "180px", height: "100px", cursor: "pointer" }}>
             <img
               src={logo}
               alt="Figurarte Logo"
@@ -68,7 +66,7 @@ function Navbar() {
                 onLogout={() => {
                   localStorage.removeItem("user");
                   setMenuOpen(false);
-                  navigate("/login");   // 👈 CORRECCIÓN DEL BUG
+                  navigate("/login");
                 }}
                 onClose={() => setMenuOpen(false)}
               />
@@ -76,17 +74,17 @@ function Navbar() {
           </div>
         ) : (
           <Link to="/login" style={{ color: "black" }}>
-            <PersonOutlineIcon
-              style={{ fontSize: "28px", cursor: "pointer" }}
-            />
+            <PersonOutlineIcon style={{ fontSize: "28px", cursor: "pointer" }} />
           </Link>
         )}
 
         {!isAdmin && user && (
           <Link to="/cart" style={{ color: "black" }}>
-            <ShoppingCartOutlinedIcon
-              style={{ fontSize: "28px", cursor: "pointer" }}
-            />
+            <Badge badgeContent={cartCount} color="error" overlap="circular">
+              <ShoppingCartOutlinedIcon
+                style={{ fontSize: "28px", cursor: "pointer" }}
+              />
+            </Badge>
           </Link>
         )}
       </div>
