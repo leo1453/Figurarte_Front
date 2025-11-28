@@ -9,6 +9,8 @@ import AdminUsers from "../views/AdminUsers";
 import ProductDetail from "../views/ProductDetail";
 import Cart from "../views/Cart";
       import Checkout from "../views/Checkout";
+import CompraExitosa from "../views/CompraExitosa";
+
 
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
@@ -23,6 +25,8 @@ function AppRouter() {
       <Route path="/register" element={<Register />} />
       <Route path="/producto/:id" element={<ProductDetail />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/compra-exitosa" element={<CompraExitosa />} />
+
 
 <Route path="/checkout" element={<Checkout />} />
 
