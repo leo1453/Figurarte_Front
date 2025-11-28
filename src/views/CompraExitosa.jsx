@@ -124,56 +124,46 @@ export default function CompraExitosa() {
 
           {/* BOTONES */}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {/* Ticket */}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                window.open(
-                  `http://localhost:8000/api/orders/${order.id}/ticket`,
-                  "_blank"
-                );
-              }}
-            >
-              📄 Descargar Ticket (PDF)
-            </Button>
+    {/* Descargar ticket */}
+    <Button
+        variant="contained"
+        color="primary"
+        onClick={() => {
+            window.open(`http://localhost:8000/api/orders/${order.id}/ticket`, "_blank");
+        }}
+    >
+        📄 Descargar Ticket (PDF)
+    </Button>
 
-            {/* Factura */}
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                window.open(
-                  `http://localhost:8000/api/orders/${order.id}/factura`,
-                  "_blank"
-                );
-              }}
-            >
-              🧾 Descargar Factura (PDF)
-            </Button>
+    {/* Descargar factura */}
+    <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+            window.open(`http://localhost:8000/api/orders/${order.id}/factura`, "_blank");
+        }}
+    >
+        🧾 Descargar Factura (PDF)
+    </Button>
 
-            {/* Mensaje */}
-            <Button
-              variant="outlined"
-              color="success"
-              onClick={() =>
-                window.open(
-                  `https://wa.me/5215555555555?text=Hola, tengo una duda sobre mi orden #${order.id}`,
-                  "_blank"
-                )
-              }
-            >
-              📩 Contactar Soporte
-            </Button>
+    {/* Botón de contacto */}
+    <Button
+        variant="outlined"
+        color="success"
+        onClick={() => alert("Función de mensajes próximamente")}
+    >
+        📩 Enviar Mensaje
+    </Button>
 
-            <Button
-              variant="text"
-              onClick={() => navigate("/")}
-              sx={{ mt: 1 }}
-            >
-              ← Volver al inicio
-            </Button>
-          </Box>
+    <Button
+        variant="text"
+        onClick={() => navigate("/")}
+        sx={{ mt: 1 }}
+    >
+        ← Volver al inicio
+    </Button>
+</Box>
+
         </CardContent>
       </Card>
     </Box>
