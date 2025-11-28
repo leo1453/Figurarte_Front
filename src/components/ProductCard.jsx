@@ -13,6 +13,11 @@ import {
 import ButtonCustom from "../components/ButtonCustom";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
+// ⭐ NUEVO
+import { useWishlist } from "../context/WishlistContext";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+
 const modalStyle = {
   position: "absolute",
   top: "50%",
@@ -27,6 +32,7 @@ const modalStyle = {
 };
 
 const ProductCard = ({
+  id,           // ⭐ NECESARIO para wishlist
   image,
   name,
   price,
@@ -36,6 +42,12 @@ const ProductCard = ({
   onDelete,
 }) => {
   const [openDelete, setOpenDelete] = useState(false);
+
+  // ⭐ NUEVO - obtener favoritos
+  const { wishlist, toggleFavorite } = useWishlist();
+
+  // ⭐ Saber si ya está en favoritos
+  const isFavorited = wishlist.some((fav) => fav.product_id === id);
 
   return (
     <>
@@ -61,6 +73,31 @@ const ProductCard = ({
             overflow: "hidden",
           }}
         >
+          {/* ⭐ ICONO DE FAVORITOS */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              zIndex: 10,
+              cursor: "pointer",
+              background: "rgba(255,255,255,0.7)",
+              borderRadius: "50%",
+              width: 34,
+              height: 34,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onClick={() => toggleFavorite(id)}
+          >
+            {isFavorited ? (
+              <FavoriteIcon sx={{ color: "red", fontSize: 24 }} />
+            ) : (
+              <FavoriteBorderIcon sx={{ color: "#444", fontSize: 24 }} />
+            )}
+          </Box>
+
           <CardMedia
             component="img"
             image={image}
@@ -110,7 +147,8 @@ const ProductCard = ({
           )}
         </CardActions>
       </Card>
-            <ConfirmDeleteModal
+
+      <ConfirmDeleteModal
         open={openDelete}
         onClose={() => setOpenDelete(false)}
         onConfirm={() => {
