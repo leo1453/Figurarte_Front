@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -7,6 +7,7 @@ import logo from "../assets/figurarte.png";
 import UserMenu from "../components/UserMenu";
 
 function Navbar() {
+  const navigate = useNavigate();   // 👈 agregado para navegación
   const user = JSON.parse(localStorage.getItem("user"));
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -49,8 +50,6 @@ function Navbar() {
         </Link>
       </div>
 
-      
-
       <div style={{ display: "flex", gap: "25px", alignItems: "center" }}>
         {user ? (
           <div style={{ position: "relative" }}>
@@ -62,12 +61,14 @@ function Navbar() {
                 color: isAdmin ? "#c0392b" : "black",
               }}
             />
+
             {menuOpen && (
               <UserMenu
                 user={user}
                 onLogout={() => {
                   localStorage.removeItem("user");
-                  window.location.reload();
+                  setMenuOpen(false);
+                  navigate("/login");   // 👈 CORRECCIÓN DEL BUG
                 }}
                 onClose={() => setMenuOpen(false)}
               />
@@ -87,10 +88,7 @@ function Navbar() {
               style={{ fontSize: "28px", cursor: "pointer" }}
             />
           </Link>
-        
         )}
-
-        
       </div>
     </nav>
   );
