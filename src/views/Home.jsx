@@ -8,6 +8,7 @@ import FeedbackSnackbar from "../components/FeedbackSnackbar";
 import { ProductGrid } from "../components/ProductGrid";
 import ProductModal from "../components/ProductModal";
 import FabCustom from "../components/FabCustom";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -96,6 +97,13 @@ const Home = () => {
     fetchProducts(value);
   };
 
+  const navigate = useNavigate();
+
+const handleViewDetails = (product) => {
+  navigate(`/producto/${product.id}`, { state: product });
+};
+
+
   return (
     <Box sx={{ width: "100%", p: 0, m: 0 }}>
       {loading && (
@@ -128,6 +136,7 @@ const Home = () => {
         isAdmin={isAdmin}
         onEditProduct={openModal}
         onDeleteProduct={deleteProduct}
+        onViewDetails={handleViewDetails}
       />
 
       <ProductModal

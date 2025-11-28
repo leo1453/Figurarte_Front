@@ -116,7 +116,7 @@ function Navbar() {
         )}
 
         {!isAdmin && user && (
-          <Link to="/carrito" style={{ color: "black" }}>
+          <Link to="/cart" style={{ color: "black" }}>
             <ShoppingCartOutlinedIcon
               style={{ fontSize: "28px", cursor: "pointer" }}
             />
