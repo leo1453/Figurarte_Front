@@ -49,41 +49,7 @@ function Navbar() {
         </Link>
       </div>
 
-      <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
-        <div
-          style={{
-            width: "60%",
-            display: "flex",
-            background: "white",
-            border: "1px solid #ddd",
-            borderRadius: "30px",
-            overflow: "hidden",
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Buscar producto..."
-            style={{
-              flex: 1,
-              padding: "12px 20px",
-              border: "none",
-              outline: "none",
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            style={{
-              padding: "12px 20px",
-              border: "none",
-              background: "black",
-              color: "white",
-              cursor: "pointer",
-            }}
-          >
-            <SearchIcon />
-          </button>
-        </div>
-      </div>
+      
 
       <div style={{ display: "flex", gap: "25px", alignItems: "center" }}>
         {user ? (
