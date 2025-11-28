@@ -97,7 +97,7 @@ const Home = () => {
 
   const handleSearchSubmit = (value) => {
     setSearch(value);
-    fetchProducts(value); // ⭐ ACTIVAR FILTRO DEL BACKEND
+    fetchProducts(value); 
   };
 
   const navigate = useNavigate();
@@ -127,7 +127,7 @@ const Home = () => {
       <Title text={isAdmin ? "GESTIÓN DE PRODUCTOS" : "Panel Principal"} />
 
 
-      {/* ⭐ BARRA DE BÚSQUEDA FUNCIONAL */}
+  
       <SearchBar
         open={searchOpen}
         setOpen={setSearchOpen}

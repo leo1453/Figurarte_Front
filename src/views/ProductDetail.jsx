@@ -25,9 +25,6 @@ const ProductDetail = () => {
     );
   }
 
-  // ===============================
-  //   CAMBIAR CANTIDAD DE COMPRA
-  // ===============================
   const aumentar = () => {
     if (cantidad < product.stock) setCantidad(cantidad + 1);
   };
@@ -36,9 +33,6 @@ const ProductDetail = () => {
     if (cantidad > 1) setCantidad(cantidad - 1);
   };
 
-  // ===============================
-  //   AGREGAR AL CARRITO
-  // ===============================
   const agregarAlCarrito = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -68,7 +62,7 @@ const ProductDetail = () => {
       setAlertMsg("Producto agregado al carrito 🎉");
       setAlertOpen(true);
 
-      refreshCart(); // 🔥 Actualiza el contador global
+      refreshCart();
 
     } catch (error) {
       setAlertType("error");
@@ -95,17 +89,20 @@ const ProductDetail = () => {
           justifyContent: "center",
         }}
       >
-        <Box
+       <Box
           component="img"
           src={product.imagen}
           alt={product.nombre}
           sx={{
-            width: "100%",
-            maxWidth: 450,
+            width: 400,     
+            height: 400,      
+            objectFit: "contain", 
             borderRadius: "14px",
+            backgroundColor: "#fff",
             boxShadow: "0 8px 25px rgba(0,0,0,0.2)",
           }}
         />
+
       </Box>
 
       <Box
@@ -140,9 +137,7 @@ const ProductDetail = () => {
           <strong>Categoría:</strong> {product.categoria}
         </Typography>
 
-        {/* =============================
-            SELECTOR DE CANTIDAD
-        ============================= */}
+  
         <Box
           sx={{
             mt: 3,
@@ -176,7 +171,6 @@ const ProductDetail = () => {
           </IconButton>
         </Box>
 
-        {/* BOTÓN AGREGAR */}
         <Button
           variant="contained"
           sx={{

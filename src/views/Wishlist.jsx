@@ -1,8 +1,10 @@
 import { useWishlist } from "../context/WishlistContext";
 import ProductCard from "../components/ProductCard";
+import { useNavigate } from "react-router-dom";
 
 export default function Wishlist() {
   const { wishlist } = useWishlist();
+  const navigate = useNavigate();
 
   return (
     <div style={{ padding: "30px" }}>
@@ -24,15 +26,25 @@ export default function Wishlist() {
           justifyContent: "center",
         }}
       >
-        {wishlist.map((fav) => (
-          <ProductCard
-            key={fav.id}
-            id={fav.product.id}
-            name={fav.product.nombre}
-            price={fav.product.precio}
-            image={fav.product.imagen}
-          />
-        ))}
+        {wishlist.map((fav) => {
+          const product = fav.product;
+
+          return (
+            <ProductCard
+              key={fav.id}
+              id={product.id}
+              name={product.nombre}
+              price={product.precio}
+              image={product.imagen}
+              onClick={() =>
+                navigate(`/producto/${product.id}`, {
+                  state: product,
+                })
+              }
+              isAdmin={false} // PARA QUE NO SALGA BOTÓN DE ADMIN
+            />
+          );
+        })}
       </div>
     </div>
   );
