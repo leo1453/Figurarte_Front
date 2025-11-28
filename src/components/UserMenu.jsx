@@ -2,11 +2,11 @@ import React, { useEffect, useRef } from "react";
 import { Paper, Box, Typography } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ButtonCustom from "./ButtonCustom";
+import { Link } from "react-router-dom";
 
 export default function UserMenu({ user, onLogout, onClose }) {
   const menuRef = useRef(null);
 
-  // Cerrar cuando se da clic fuera
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -17,6 +17,8 @@ export default function UserMenu({ user, onLogout, onClose }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
+
+  const isAdmin = user?.role === "admin";
 
   return (
     <Paper
@@ -42,7 +44,6 @@ export default function UserMenu({ user, onLogout, onClose }) {
         },
       }}
     >
-      {/* Flecha */}
       <Box
         sx={{
           position: "absolute",
@@ -56,8 +57,6 @@ export default function UserMenu({ user, onLogout, onClose }) {
           filter: "drop-shadow(0px -1px 2px rgba(0,0,0,0.1))",
         }}
       />
-
-      {/* Avatar */}
       <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 1.5 }}>
         <Box
           sx={{
@@ -76,10 +75,7 @@ export default function UserMenu({ user, onLogout, onClose }) {
         </Box>
       </Box>
 
-      <Typography
-        variant="h6"
-        sx={{ textAlign: "center", fontWeight: "bold", color: "#333" }}
-      >
+      <Typography variant="h6" sx={{ textAlign: "center", fontWeight: "bold" }}>
         {user?.name || "Usuario"}
       </Typography>
 
@@ -92,19 +88,28 @@ export default function UserMenu({ user, onLogout, onClose }) {
           textAlign: "center",
           fontSize: "0.9rem",
           fontWeight: "bold",
-          color: user?.role === "admin" ? "#6a11cb" : "#2575fc",
+          color: isAdmin ? "#6a11cb" : "#2575fc",
         }}
       >
         Rol: {(user?.role || "user").toUpperCase()}
       </Typography>
+      {isAdmin && (
+        <Box sx={{ mt: 1, display: "flex", flexDirection: "column", gap: 1 }}>
+          <Link to="/admin/usuarios" style={{ textDecoration: "none" }}>
+            <ButtonCustom title="CRUD Usuarios" fullWidth variant="admin" />
+          </Link>
 
-      {/* Botón cerrar sesión */}
+          <Link to="/admin/products" style={{ textDecoration: "none" }}>
+            <ButtonCustom title="CRUD Productos" fullWidth variant="admin" />
+          </Link>
+
+          <Link to="/admin/reportes" style={{ textDecoration: "none" }}>
+            <ButtonCustom title="Reportes" fullWidth variant="adminOutline" />
+          </Link>
+        </Box>
+      )}
       <Box sx={{ marginTop: 1, display: "flex", justifyContent: "center" }}>
-        <ButtonCustom
-          title="Cerrar sesión"
-          variant="delete"
-          onClick={onLogout}
-        />
+        <ButtonCustom title="Cerrar sesión" variant="delete" onClick={onLogout} />
       </Box>
     </Paper>
   );

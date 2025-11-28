@@ -1,5 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -9,32 +9,13 @@ import UserMenu from "../components/UserMenu";
 function Navbar() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [menuOpen, setMenuOpen] = useState(false);
-  const userMenuRef = useRef(null);
-  const navigate = useNavigate();
 
   const toggleMenu = () => {
     if (!user) return;
     setMenuOpen(!menuOpen);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    setMenuOpen(false);
-    navigate("/login");
-  };
-
-  // Detectar clic fuera y cerrar menú
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
-        setMenuOpen(false);
-      }
-    }
-
-    if (menuOpen) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [menuOpen]);
+  const isAdmin = user?.role === "admin";
 
   return (
     <nav
@@ -51,8 +32,8 @@ function Navbar() {
         zIndex: 1000,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-        <Link to="/" style={{ display: "block" }}>
+      <div>
+        <Link to="/">
           <div
             style={{
               width: "180px",
@@ -68,7 +49,6 @@ function Navbar() {
           </div>
         </Link>
       </div>
-
       <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
         <div
           style={{
@@ -98,42 +78,48 @@ function Navbar() {
               background: "black",
               color: "white",
               cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
             }}
           >
             <SearchIcon />
           </button>
         </div>
       </div>
-
       <div style={{ display: "flex", gap: "25px", alignItems: "center" }}>
         {!user ? (
           <Link to="/login" style={{ color: "black" }}>
-            <PersonOutlineIcon style={{ fontSize: "28px", cursor: "pointer" }} />
+            <PersonOutlineIcon
+              style={{ fontSize: "28px", cursor: "pointer" }}
+            />
           </Link>
         ) : (
-          <div style={{ position: "relative" }} ref={userMenuRef}>
+          <div style={{ position: "relative" }}>
             <PersonOutlineIcon
               onClick={toggleMenu}
-              style={{ fontSize: "28px", cursor: "pointer", color: "black" }}
+              style={{
+                fontSize: "28px",
+                cursor: "pointer",
+                color: isAdmin ? "#c0392b" : "black",
+              }}
             />
-
             {menuOpen && (
               <UserMenu
                 user={user}
-                onLogout={handleLogout}
+                onLogout={() => {
+                  localStorage.removeItem("user");
+                  window.location.reload();
+                }}
+                onClose={() => setMenuOpen(false)}
               />
             )}
           </div>
         )}
-
-        <Link to="/carrito" style={{ color: "black" }}>
-          <ShoppingCartOutlinedIcon
-            style={{ fontSize: "28px", cursor: "pointer" }}
-          />
-        </Link>
+        {!isAdmin && (
+          <Link to="/carrito" style={{ color: "black" }}>
+            <ShoppingCartOutlinedIcon
+              style={{ fontSize: "28px", cursor: "pointer" }}
+            />
+          </Link>
+        )}
       </div>
     </nav>
   );

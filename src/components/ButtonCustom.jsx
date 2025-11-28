@@ -1,4 +1,3 @@
-// src/components/ButtonCustom.jsx
 import { Button } from "@mui/material";
 
 export default function ButtonCustom({
@@ -39,6 +38,20 @@ export default function ButtonCustom({
       backgroundColor: "#ffb300",
       color: "black",
       "&:hover": { backgroundColor: "#e09c00" },
+    },
+    admin: {
+      backgroundColor: "#6a11cb",
+      color: "white",
+      "&:hover": { backgroundColor: "#520fa1" },
+    },
+
+    adminOutline: {
+      backgroundColor: "transparent",
+      border: "2px solid #6a11cb",
+      color: "#6a11cb",
+      "&:hover": {
+        backgroundColor: "rgba(106,17,203,0.1)",
+      },
     },
   };
 

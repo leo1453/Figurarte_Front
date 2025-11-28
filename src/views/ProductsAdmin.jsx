@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 
 const ProductsAdmin = () => {
   const [products, setProducts] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+
   const [form, setForm] = useState({
     nombre: "",
     descripcion: "",
@@ -28,13 +30,25 @@ const ProductsAdmin = () => {
   async function saveProduct(e) {
     e.preventDefault();
 
-    await fetch("http://localhost:8000/api/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(form)
-    });
+    if (editingId) {
+      await fetch(`http://localhost:8000/api/products/${editingId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      });
+
+      setEditingId(null);
+    } else {
+      await fetch("http://localhost:8000/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      });
+    }
 
     setForm({
       nombre: "",
@@ -53,6 +67,18 @@ const ProductsAdmin = () => {
       method: "DELETE"
     });
     fetchProducts();
+  }
+
+  function loadProduct(p) {
+    setEditingId(p.id);
+    setForm({
+      nombre: p.nombre,
+      descripcion: p.descripcion,
+      precio: p.precio,
+      imagen: p.imagen,
+      stock: p.stock,
+      categoria: p.categoria
+    });
   }
 
   return (
@@ -94,14 +120,14 @@ const ProductsAdmin = () => {
               marginTop: "10px",
               border: "none",
               borderRadius: "30px",
-              background: "linear-gradient(90deg, #6a11cb, #2575fc)",
+              background: editingId ? "orange" : "linear-gradient(90deg, #6a11cb, #2575fc)",
               color: "white",
               fontSize: "1.1rem",
               fontWeight: "bold",
               cursor: "pointer"
             }}
           >
-            Guardar Producto
+            {editingId ? "Actualizar Producto" : "Guardar Producto"}
           </button>
         </form>
 
@@ -112,7 +138,7 @@ const ProductsAdmin = () => {
               <th>Precio</th>
               <th>Stock</th>
               <th>Categoría</th>
-              <th></th>
+              <th>Acciones</th>
             </tr>
           </thead>
 
@@ -123,7 +149,22 @@ const ProductsAdmin = () => {
                 <td>${p.precio}</td>
                 <td>{p.stock}</td>
                 <td>{p.categoria}</td>
-                <td>
+                <td style={{ display: "flex", gap: "8px" }}>
+                  
+                  <button
+                    onClick={() => loadProduct(p)}
+                    style={{
+                      background: "#2575fc",
+                      color: "white",
+                      border: "none",
+                      padding: "8px 12px",
+                      borderRadius: "10px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    Editar
+                  </button>
+
                   <button
                     onClick={() => deleteProduct(p.id)}
                     style={{
@@ -137,6 +178,7 @@ const ProductsAdmin = () => {
                   >
                     Eliminar
                   </button>
+
                 </td>
               </tr>
             ))}
