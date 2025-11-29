@@ -9,6 +9,10 @@ const AdminPanel = () => {
   const [products, setProducts] = useState([]);
   const [pokemonCards, setPokemonCards] = useState([]);
   const inputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState(
+    "Cargando cartas disponibles..."
+  );
 
   const [alerta, setAlerta] = useState({ tipo: "", mensaje: "" });
 
@@ -28,6 +32,13 @@ const AdminPanel = () => {
 
   async function loadPokemonCards() {
     try {
+      setLoadingText("Cargando cartas disponibles...");
+      setLoading(true);
+
+      setTimeout(() => {
+        setLoadingText("Esto puede tardar un poco...");
+      }, 3500);
+
       const res = await fetch("/tcg/cards?pageSize=30");
       const data = await res.json();
       const cards = data.data.map((card) => ({
@@ -38,8 +49,8 @@ const AdminPanel = () => {
         stock: 10,
         categoria: "Pokemon Card",
       }));
-      setPokemonCards(cards);
 
+      setPokemonCards(cards);
       setAlerta({
         tipo: "success",
         mensaje: "Cartas Pokémon cargadas correctamente",
@@ -49,6 +60,8 @@ const AdminPanel = () => {
         tipo: "error",
         mensaje: "Error al cargar cartas Pokémon",
       });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -118,6 +131,17 @@ const AdminPanel = () => {
       });
     }
   };
+
+  if (loading) {
+    return (
+      <div style={loaderOverlayStyle}>
+        <div style={loaderBoxStyle}>
+          <div style={spinnerStyle}></div>
+          <p style={{ marginTop: "20px", fontSize: "1.1rem" }}>{loadingText}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -313,5 +337,46 @@ const cardStyle = (bg) => ({
   textAlign: "center",
   fontWeight: "600",
 });
+
+const loaderOverlayStyle = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100vw",
+  height: "100vh",
+  backdropFilter: "blur(6px)",
+  background: "rgba(255, 255, 255, 0.4)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: 9999,
+};
+
+const loaderBoxStyle = {
+  background: "white",
+  padding: "40px",
+  borderRadius: "20px",
+  boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
+
+const spinnerStyle = {
+  width: "60px",
+  height: "60px",
+  border: "6px solid #e0d4ff",
+  borderTop: "6px solid #6a11cb",
+  borderRadius: "50%",
+  animation: "spin 1s linear infinite",
+};
+
+const styleSheet = document.styleSheets[0];
+styleSheet.insertRule(`
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+`);
 
 export default AdminPanel;
