@@ -51,7 +51,7 @@ const ProductDetail = () => {
         },
         body: JSON.stringify({
           product_id: product.id,
-          cantidad, // 🔥 Cantidad seleccionada
+          cantidad, 
           user_id: user.id,
         }),
       });
