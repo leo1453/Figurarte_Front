@@ -46,7 +46,7 @@ const AdminPanel = () => {
             boxShadow: "0 3px 8px rgba(0,0,0,0.25)"
           }}
         >
-          Administrar Productos
+          Ir al Panel de Administración
         </Link>
       </div>
     </div>

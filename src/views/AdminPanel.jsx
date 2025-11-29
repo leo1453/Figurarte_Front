@@ -1,7 +1,21 @@
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Paper,
+} from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import FeedbackSnackbar from "../components/FeedbackSnackbar";
+import Loader from "../components/Loader";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const AdminPanel = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -132,16 +146,7 @@ const AdminPanel = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div style={loaderOverlayStyle}>
-        <div style={loaderBoxStyle}>
-          <div style={spinnerStyle}></div>
-          <p style={{ marginTop: "20px", fontSize: "1.1rem" }}>{loadingText}</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <Loader text={loadingText} />;
 
   return (
     <div
@@ -230,36 +235,71 @@ const AdminPanel = () => {
             Gestionar Usuarios
           </div>
         </div>
-
-        {/* TABLA */}
-        <h3>Productos existentes</h3>
-        <table
-          style={{
-            width: "100%",
-            textAlign: "left",
-            borderCollapse: "collapse",
-            marginBottom: "20px",
+        <Accordion
+          defaultExpanded
+          sx={{
+            borderRadius: "16px",
+            overflow: "hidden",
+            background: "#f7eaff",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
           }}
         >
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Precio</th>
-              <th>Stock</th>
-              <th>Categoría</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((p) => (
-              <tr key={p.id} style={{ borderBottom: "1px solid #ddd" }}>
-                <td>{p.nombre}</td>
-                <td>${p.precio}</td>
-                <td>{p.stock}</td>
-                <td>{p.categoria}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            sx={{
+              background: "#e4ccff",
+              padding: "15px 20px",
+              fontFamily: "'Poppins', sans-serif",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: "1.2rem",
+                fontWeight: 600,
+              }}
+            >
+              Productos existentes
+            </Typography>
+          </AccordionSummary>
+
+          <AccordionDetails sx={{ padding: 0 }}>
+            <Paper
+              sx={{
+                width: "100%",
+                overflow: "hidden",
+                borderRadius: 0,
+              }}
+            >
+              <Table>
+                <TableHead sx={{ background: "#f1e4ff" }}>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>Nombre</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Precio</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Stock</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>Categoría</TableCell>
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {products.map((p) => (
+                    <TableRow
+                      key={p.id}
+                      sx={{
+                        "&:hover": { background: "#f6f0ff" },
+                        transition: "0.2s",
+                      }}
+                    >
+                      <TableCell>{p.nombre}</TableCell>
+                      <TableCell>${p.precio}</TableCell>
+                      <TableCell>{p.stock}</TableCell>
+                      <TableCell>{p.categoria}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Paper>
+          </AccordionDetails>
+        </Accordion>
 
         {/* PREVIEW POKÉMON */}
         {pokemonCards.length > 0 && (
@@ -337,46 +377,5 @@ const cardStyle = (bg) => ({
   textAlign: "center",
   fontWeight: "600",
 });
-
-const loaderOverlayStyle = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100vw",
-  height: "100vh",
-  backdropFilter: "blur(6px)",
-  background: "rgba(255, 255, 255, 0.4)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  zIndex: 9999,
-};
-
-const loaderBoxStyle = {
-  background: "white",
-  padding: "40px",
-  borderRadius: "20px",
-  boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-};
-
-const spinnerStyle = {
-  width: "60px",
-  height: "60px",
-  border: "6px solid #e0d4ff",
-  borderTop: "6px solid #6a11cb",
-  borderRadius: "50%",
-  animation: "spin 1s linear infinite",
-};
-
-const styleSheet = document.styleSheets[0];
-styleSheet.insertRule(`
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-`);
 
 export default AdminPanel;

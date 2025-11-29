@@ -67,29 +67,31 @@ const ProductCard = ({
             backgroundColor: "#fff",
           }}
         >
-          <Box
-            sx={{
-              position: "absolute",
-              top: 10,
-              right: 10,
-              zIndex: 10,
-              cursor: "pointer",
-              background: "rgba(255,255,255,0.7)",
-              borderRadius: "50%",
-              width: 34,
-              height: 34,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onClick={handleToggleFavorite}
-          >
-            {isFavorited ? (
-              <FavoriteIcon sx={{ color: "red", fontSize: 24 }} />
-            ) : (
-              <FavoriteBorderIcon sx={{ color: "#444", fontSize: 24 }} />
-            )}
-          </Box>
+          {!isAdmin && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: 10,
+                right: 10,
+                zIndex: 10,
+                cursor: "pointer",
+                background: "rgba(255,255,255,0.7)",
+                borderRadius: "50%",
+                width: 34,
+                height: 34,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onClick={handleToggleFavorite}
+            >
+              {isFavorited ? (
+                <FavoriteIcon sx={{ color: "red", fontSize: 24 }} />
+              ) : (
+                <FavoriteBorderIcon sx={{ color: "#444", fontSize: 24 }} />
+              )}
+            </Box>
+          )}
 
           <CardMedia
             component="img"
@@ -98,7 +100,7 @@ const ProductCard = ({
             sx={{
               maxWidth: "100%",
               maxHeight: "100%",
-              objectFit: "contain",  
+              objectFit: "contain",
               objectPosition: "center",
               transition: "0.3s ease",
             }}
