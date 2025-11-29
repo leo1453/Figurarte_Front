@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";   
 import logo from "../assets/figurarte.png";
 
 const Register = () => {
+  const navigate = useNavigate();  
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,6 +31,7 @@ const Register = () => {
 
       if (res.ok) {
         alert("Registro exitoso");
+        navigate("/login");   
       } else {
         alert("Error: " + data.message);
       }
@@ -143,7 +146,6 @@ const Register = () => {
           </button>
         </form>
 
-        {/* Login link */}
         <p style={{ marginTop: "20px", color: "#555" }}>
           ¿Ya tienes cuenta?{" "}
           <Link to="/login" style={{ color: "#6a11cb", fontWeight: "bold" }}>
